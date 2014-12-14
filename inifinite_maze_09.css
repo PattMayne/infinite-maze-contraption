@@ -1,0 +1,25 @@
+body {
+	background-color: #FFFFFF;
+	color: #000000;
+	font-family: arial;
+}
+
+#pageWrapper {
+	width: 100%;
+	height: 100%;
+	text-align: center;
+}
+
+#headerText {
+	font:
+
+}
+
+#mazeCanvas {
+	width: 700px;
+	height: 700px;
+	margin: auto;
+}
+
+
+
