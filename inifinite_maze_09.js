@@ -103,24 +103,31 @@ function setupCanvas() {
 *	Tell the browser to send a signal to our program when certain keys are pressed (W,A,S,D), and then perform a certain function for each key.
 */
 function setupKeyListener() {
-	document.addEventListener('keydown', function (event) {
-		if (event.keyCode == 87) {
-			// W
-			moveUp();
-		}
-		else if (event.keyCode == 65) {
-			//A
-			moveLeft();
-		}
-		else if (event.keyCode == 83) {
-			//S
-			moveDown();
-		}
-		else if (event.keyCode == 68) {
-			//D
-			moveRight();
-		}
-	});
+	document.addEventListener(
+		"keydown",
+		(event) => {
+			const input = event.key || event.code;
+			switch (event.code) {
+				case "KeyS":
+				case "ArrowDown":
+					moveDown();
+					break;
+				case "KeyW":
+				case "ArrowUp":
+					moveUp();
+					break;
+				case "KeyA":
+				case "ArrowLeft":
+					moveLeft();
+					break;
+				case "KeyD":
+				case "ArrowRight":
+					moveRight();
+					break;
+			}
+		},
+		true,
+	);
 
 }
 
