@@ -1,3 +1,9 @@
+# Infinite Maze Contraption
+
+This was an early experiment for top-down game maps. It was the basis for the more-complex maps in my Java and now C++ game experiments.
+
+![alt text](screenshot_001.png)
+
 Infinite Maze Contraption is a simple maze which constantly auto-generates as the user travels up the screen. Adaptations of this software could concievably be used for more dynamic mazes or top-down games.
 
 It's based on a flowing grid of blocks (which overlays a static matrix of points), where each block may either be a floor or a wall.

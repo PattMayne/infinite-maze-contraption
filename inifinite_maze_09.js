@@ -289,9 +289,9 @@ function makePath() {
 		paths.splice(paths.indexOf(pathsToSplice[i]), 1);
 	}
 
-	pathSeeds = [];
-	secondSeeds = [];
-	pathsToSplice = [];
+	pathSeeds = []
+	secondSeeds = []
+	pathsToSplice = []
 }
 
 //This function makes secondary offshoots from the main path.
@@ -300,30 +300,35 @@ function makePath() {
 //
 //This function needs to be fed a seed block.
 function makeSubPath(firstBlock) {
-	var newPath = new Path();
+	var newPath = new Path()
 
-	newPath.distance = Math.floor(Math.random() * (numberOfRowBlocks * 2));
-	newPath.subPath[0] = firstBlock;
+	newPath.distance = Math.floor(Math.random() * (numberOfRowBlocks * 2))
+	newPath.subPath[0] = firstBlock
 
-	currentBlock = firstBlock;
-	var createPath = true;
-	var possibleNextBlocks = [];
+	currentBlock = firstBlock
+	var createPath = true
+	var possibleNextBlocks = []
 
 	while (createPath == true) {
-		var nBlock;
-		possibleNextBlocks = [];
+		var nBlock
+		possibleNextBlocks = []
 
 		for (var i = 0; i < currentBlock.adjacentBlocks.length; i++) {
 			nBlock = currentBlock.adjacentBlocks[i];
 			checkForWallBlocks(nBlock);
 
-			if (nBlock.rowIndex > 0 && nBlock.rowIndex <= maze.rows.length - 3 && nBlock.blockIndex > 0 && nBlock.blockIndex < numberOfRowBlocks - 1 && nBlock.isWall == true && nBlock.numberOfAdjacentWalls > 2) {
+			if (nBlock.rowIndex > 0 &&
+				nBlock.rowIndex <= maze.rows.length - 3 &&
+				nBlock.blockIndex > 0 &&
+				nBlock.blockIndex < numberOfRowBlocks - 1 &&
+				nBlock.isWall == true &&
+				nBlock.numberOfAdjacentWalls > 2
+			) {
 				possibleNextBlocks[possibleNextBlocks.length] = nBlock;
 			}
 			else if (nBlock.rowIndex == 1 && nBlock.numberOfAdjacentWalls > 1) {
 				possibleNextBlocks[possibleNextBlocks.length] = nBlock;
 			}
-
 		}
 
 		if (possibleNextBlocks.length > 0) {
@@ -341,14 +346,11 @@ function makeSubPath(firstBlock) {
 				pathsToSplice[pathsToSplice.length] = newPath;
 			}
 
-
 		} else if (Math.floor(Math.random() * 20) < 3) {
 			//At random intervals, set aside a block as a seed to generate a new path.
 			secondSeeds[secondSeeds.length] = currentBlock;
 		}
-
 	}
-
 }
 
 /**
@@ -357,40 +359,35 @@ function makeSubPath(firstBlock) {
 *	The list will start at the top with [0], and move clockwise for [1, 2, 3].
 */
 function getAdjacentBlocks(middleBlock) {
-	var aBlocks = [];
-	var thisRowIndex = middleBlock.rowIndex;
-	var thisBlockIndex = middleBlock.blockIndex;
+	var aBlocks = []
+	var thisRowIndex = middleBlock.rowIndex
+	var thisBlockIndex = middleBlock.blockIndex
 
 
 	//check to see if each block really exists, then add that block to the list.
 	if (thisRowIndex > 0) {
-		aBlocks[aBlocks.length] = maze.rows[thisRowIndex - 1].blocks[thisBlockIndex];
-
+		aBlocks[aBlocks.length] = maze.rows[thisRowIndex - 1].blocks[thisBlockIndex]
 	}
 
 	if (thisBlockIndex < numberOfRowBlocks - 2) {
-		aBlocks[aBlocks.length] = maze.rows[thisRowIndex].blocks[thisBlockIndex + 1];
-
+		aBlocks[aBlocks.length] = maze.rows[thisRowIndex].blocks[thisBlockIndex + 1]
 	}
 
 	if (thisRowIndex < maze.rows.length - 3) {
-		aBlocks[aBlocks.length] = maze.rows[thisRowIndex + 1].blocks[thisBlockIndex];
+		aBlocks[aBlocks.length] = maze.rows[thisRowIndex + 1].blocks[thisBlockIndex]
 	}
 
 	if (thisBlockIndex > 0) {
-		aBlocks[aBlocks.length] = maze.rows[thisRowIndex].blocks[thisBlockIndex - 1];
+		aBlocks[aBlocks.length] = maze.rows[thisRowIndex].blocks[thisBlockIndex - 1]
 	}
 
-	middleBlock.adjacentBlocks = aBlocks;
+	middleBlock.adjacentBlocks = aBlocks
 }
 
-//I might delete this function.
 //This function cycles through all the blocks and sets their adjacentBlocks lists.
 function resetAdjacentBlocks() {
 	for (var i = maze.rows.length - 1; i > 0; i--) {
-		for (var k = 0; k < maze.rows[i].blocks.length; k++) {
-			getAdjacentBlocks(maze.rows[i].blocks[k]);
-		}
+		maze.rows[i].blocks.map(block => getAdjacentBlocks(block))
 	}
 }
 
@@ -405,19 +402,13 @@ function makeCharacter() {
 	This function just iterates through each block in each row of the maze, and tells the drawBlock function to draw that block.
 */
 function drawMaze() {
-	var block;
 	context.strokeStyle = "#2E64FE";
-
 	context.fillStyle = "#000000";
 	context.fillRect(0, 0, mazeCanvas.width, mazeCanvas.height);
 
-	for (var i = 0; i < maze.rows.length; i++) {
-		for (var h = 0; h < maze.rows[i].blocks.length; h++) {
-			block = maze.rows[i].blocks[h];
-
-			drawBlock(block);
-		}
-	}
+	maze.rows.map(row => 
+		row.blocks.map(block => drawBlock(block))
+	)
 }
 
 //Draw one block.
@@ -510,10 +501,7 @@ function shiftMaze() {
 
 	for (var i = maze.rows.length - 1; i > 0; i--) {
 		maze.rows[i] = maze.rows[i - 1];
-
-		for (var k = 0; k < maze.rows[i].blocks.length; k++) {
-			moveBlockDown(maze.rows[i].blocks[k]);
-		}
+		maze.rows[i].blocks.map(block => moveBlockDown(block))
 	}
 
 	createNewRow();
@@ -524,10 +512,7 @@ function shiftMaze() {
 function moveBlockDown(mBlock) {
 	mBlock.rowIndex++;
 	mBlock.centerPoint.y += squareLength;
-	for (var f = 0; f < mBlock.points.length; f++) {
-		mBlock.points[f].y += squareLength;
-
-	}
+	mBlock.points.map(point => point.y += squareLength)
 }
 
 function createNewRow() {
@@ -547,12 +532,13 @@ function createNewRow() {
 
 		fourPoints = [];
 	}
-	resetAdjacentBlocks();
 
+	resetAdjacentBlocks();
 }
 
-//Now that the maze and all its blocks have been shifted, and new rows generated,
-//We need to extend our paths.
+/* Now that the maze and all its blocks have been shifted, and new rows generated,
+ *	We need to extend our paths.
+ */
 function shiftPaths() {
 
 	//Splice out the dead paths
@@ -577,7 +563,6 @@ function shiftPaths() {
 		}
 	}
 
-
 	pathSeeds = secondSeeds;
 
 	//create new subPaths FROM the secondary branches
@@ -587,8 +572,6 @@ function shiftPaths() {
 
 	pathSeeds = [];
 	secondSeeds = [];
-
-
 }
 
 function extendMainPath() {
@@ -630,7 +613,7 @@ function extendMainPath() {
 
 }
 
-//Extend all the secondary paths
+/* Extend all the secondary paths */
 function extendPaths(thisPath) {
 	var latestBlock = thisPath.subPath[thisPath.subPath.length - 1];
 	var createPath = true;
@@ -646,12 +629,16 @@ function extendPaths(thisPath) {
 			nBlock = latestBlock.adjacentBlocks[i];
 			checkForWallBlocks(nBlock);
 
-			if (nBlock.rowIndex > 0 && nBlock.rowIndex <= maze.rows.length - 3 && nBlock.blockIndex > 0 && nBlock.blockIndex < numberOfRowBlocks - 1 && nBlock.isWall == true && nBlock.numberOfAdjacentWalls > 2) {
+			if (nBlock.rowIndex > 0 &&
+				nBlock.rowIndex <= maze.rows.length - 3 &&
+				nBlock.blockIndex > 0 &&
+				nBlock.blockIndex < numberOfRowBlocks - 1 &&
+				nBlock.isWall == true &&
+				nBlock.numberOfAdjacentWalls > 2
+			){
 				possibleNextBlocks[possibleNextBlocks.length] = nBlock;
 			}
 		}
-
-
 
 		if (possibleNextBlocks.length > 0) {
 			latestBlock = possibleNextBlocks[Math.floor(Math.random() * possibleNextBlocks.length)];
@@ -676,7 +663,6 @@ function extendPaths(thisPath) {
 }
 
 
-
 function checkForWallBlocks(thisBlock) {
 	thisBlock.numberOfAdjacentWalls = 0;
 	for (var i = 0; i < thisBlock.adjacentBlocks.length; i++) {
@@ -687,24 +673,23 @@ function checkForWallBlocks(thisBlock) {
 }
 
 
-
 //These are the functions which act as classes for objects in the game.
 
 function Character() {
 	this.location;
-
 }
 
 function Maze() {
 	this.rows = [];
-
 }
 
 function Block(fourPoints) {
 	this.points = fourPoints;
 	this.isWall = true;
 
-	this.centerPoint = new Point(this.points[1].x - (squareLength / 2), this.points[2].y - (squareLength / 2));
+	this.centerPoint = new Point(
+		this.points[1].x - (squareLength / 2),
+		this.points[2].y - (squareLength / 2));
 
 	this.rowIndex;
 	this.blockIndex;
@@ -716,14 +701,13 @@ function Path() {
 	this.subPath = [];
 	this.distance = 0;
 	paths[paths.length] = this;
-
 }
 
 function PointGrid() {
 	this.rows = [];
 }
 
-//A Row may hold either Block objects, or Point objects, or both.
+/* A Row may hold either Block objects, or Point objects, or both. */
 function Row() {
 	this.points = [];
 	this.blocks = [];
