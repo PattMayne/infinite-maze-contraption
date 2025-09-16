@@ -1,6 +1,6 @@
 # Infinite Maze Contraption
 
-This was an early experiment for top-down game maps. It was the basis for the more-complex maps in my Java and now C++ game experiments.
+This was an early experiment for top-down game maps. It was the basis for the maps in my Java and now C++ game experiments.
 
 ![alt text](screenshot_001.png)
 
